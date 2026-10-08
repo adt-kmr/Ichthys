@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ichthys"
+version = "0.1.0"
+description = "Geometry-supervised multi-camera 3D tracking for schooling fish"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+dependencies = [
+  "motmetrics>=1.4",
+  "numpy>=1.24,<2",
+  "pycocotools>=2.0.7",
+  "scipy>=1.10",
+  "torch>=2.2",
+  "torchvision>=0.17",
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+viz = ["streamlit>=1.50", "plotly>=5.18", "pandas>=2.0"]
+
+[project.scripts]
+ichthys-train = "train:main"
+ichthys-infer = "infer:main"
+ichthys-evaluate = "evaluate:main"
+ichthys-sort3d = "sort3d:main"
+ichthys-viz = "app:main"
+
+[tool.setuptools]
+py-modules = ["train", "infer", "evaluate", "sort3d", "app"]
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages.find]
+include = ["utils*", "viz*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
