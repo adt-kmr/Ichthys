@@ -30,6 +30,11 @@ ichthys-evaluate = "evaluate:main"
 ichthys-sort3d = "sort3d:main"
 ichthys-viz = "app:main"
 
+[project.urls]
+Homepage = "https://github.com/adt-kmr/Ichthys"
+Documentation = "https://github.com/adt-kmr/Ichthys#readme"
+Repository = "https://github.com/adt-kmr/Ichthys"
+
 [tool.setuptools]
 py-modules = ["train", "infer", "evaluate", "sort3d", "app"]
 license-files = ["LICENSE"]
