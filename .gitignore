@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+build/
+dist/
+.DS_Store
+
+# Generated training and evaluation artifacts
+checkpoints/
+outputs/
+pseudo_gt/
+*.pth
+*.pt
+*.log
+
+# Dashboard scratch space (scripts/make_demo_workspace.py)
+demo_workspace/
+.ichthys_jobs/
+.ichthys_uploads/
