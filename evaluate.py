@@ -204,7 +204,7 @@ all_ts = sorted(set(pred.keys()) | set(gt.keys()))
 			out.append(mapping[s])
 		return out, next_id
 
-	for t in tqdm(all_ts, desc="Evaluating frames"):
+	for t in tqdm(all_ts, desc="Evaluating frames", mininterval=5, miniters=1):
 		gt_items = gt.get(t, [])
 		pr_items = pred.get(t, [])
 		if ignore_empty_frames and len(gt_items) == 0 and len(pr_items) == 0:
