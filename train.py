@@ -84,7 +84,28 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--train_workers", type=int, default=64, help="Parallel workers for training JSON parsing.")
     parser.add_argument("--val_workers", type=int, default=32, help="Parallel workers for validation JSON parsing.")
-    return parser.parse_args()
+
+    args = parser.parse_args()
+
+    # Validate train folder exists
+    train_path = Path(args.train_folder)
+    if not train_path.exists():
+        raise FileNotFoundError(
+            f"Training folder not found: {args.train_folder}\n"
+            "Please check the path and ensure the directory exists.\n"
+            "Usage: python train.py <train_folder> [val_folder] [options]"
+        )
+
+    # Validate val folder if provided
+    if args.val_folder is not None:
+        val_path = Path(args.val_folder)
+        if not val_path.exists():
+            raise FileNotFoundError(
+                f"Validation folder not found: {args.val_folder}\n"
+                "Please check the path and ensure the directory exists."
+            )
+
+    return args
 
 
 def resolve_grouping_mode(args: argparse.Namespace) -> str:
