@@ -95,3 +95,7 @@ This document explains the different error categories you might encounter when u
 - Bash: `source scripts/ichthys-completion.sh`
 - Zsh: Add to `.zshrc`: `fpath+=(~/scripts)` and `autoload -U compinit && compinit`
 - Re-run your shell after sourcing the completion script
+
+## Contributors
+
+- @adt-kmr - initial implementation
