@@ -405,6 +405,15 @@ def run_inference_new(
     """
     device = device or ("cuda" if torch.cuda.is_available() else "cpu")
 
+    # -------------------------------------------------------- checkpoint check
+    ckpt_path = Path(ckpt_path)
+    if not ckpt_path.exists():
+        raise FileNotFoundError(
+            f"Checkpoint not found: {ckpt_path}\n"
+            "Please verify the path is correct and the file exists.\n"
+            "Usage: python infer.py <ckpt> <scene_json> <images_root> [options]"
+        )
+
     # ------------------------------------------------------------------ load
     cams, frames, scene_name = parse_scene_json(scene_json_path, workers=workers)
     print(f"Loaded scene: {scene_name}  frames={len(frames)}")
