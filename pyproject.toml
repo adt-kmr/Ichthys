@@ -38,6 +38,7 @@ Repository = "https://github.com/adt-kmr/Ichthys"
 [tool.setuptools]
 py-modules = ["train", "infer", "evaluate", "sort3d", "app"]
 license-files = ["LICENSE"]
+init-dir-with = ["scripts/ichthys-completion.sh", "scripts/ichthys-completion.zsh"]
 
 [tool.setuptools.packages.find]
 include = ["utils*", "viz*"]
