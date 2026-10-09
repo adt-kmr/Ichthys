@@ -162,6 +162,14 @@ def render_sidebar() -> tuple:
 		st.stop()
 	st.session_state["root"] = str(root)
 
+	# Display data loaded status
+	if workspace is not None:
+		st.sidebar.info(
+			f"Data loaded: {len(workspace.predictions)} predictions, "
+			f"{len(workspace.ground_truth)} ground truth, "
+			f"{len(workspace.scenes)} scenes"
+		)
+
 	if st.sidebar.button("Rescan", help="Forget cached file listings and scan again"):
 		cached_workspace.clear()
 		st.rerun()
