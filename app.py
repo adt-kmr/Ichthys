@@ -784,19 +784,36 @@ def render_jobs(root: Path) -> None:
 # Entry point
 # ---------------------------------------------------------------------------
 def main() -> None:
-	from streamlit.runtime import exists as streamlit_runtime_exists
+    from streamlit.runtime import exists as streamlit_runtime_exists
 
-	if not streamlit_runtime_exists():
-		# Reached via `ichthys-viz` or a bare `python app.py`; Streamlit
-		# needs to own the script run for widgets and reruns to work.
-		raise SystemExit(
-			"The dashboard must be run by Streamlit:\n"
-			"    streamlit run app.py\n"
-			"(optionally add -- --workspace /path/to/outputs)"
-		)
+    if not streamlit_runtime_exists():
+        # Reached via `ichthys-viz` or a bare `python app.py`; Streamlit
+        # needs to own the script run for widgets and reruns to work.
+        raise SystemExit(
+            "The dashboard must be run by Streamlit:\n"
+            "    streamlit run app.py\n"
+            "(optionally add -- --workspace /path/to/outputs)"
+        )
 
-	st.title("Ichthys dashboard")
-	root, workspace = render_sidebar()
+    # ------------------------------------------------------------------ workspace check
+    from pathlib import Path
+    import sys
+
+    REPOSITORY_ROOT = Path(__file__).resolve().parent
+    if str(REPOSITORY_ROOT) not in sys.path:
+        sys.path.insert(0, str(REPOSITORY_ROOT))
+
+    root_text = st.session_state.get("root", str(REPOSITORY_ROOT))
+    root = Path(root_text).expanduser()
+    if not root.exists():
+        raise FileNotFoundError(
+            f"Workspace root does not exist: {root}\n"
+            "Please provide a valid path with: streamlit run app.py -- --workspace /path/to/outputs\n"
+            "Or upload files via the sidebar to use temporary storage."
+        )
+
+    st.title("Ichthys dashboard")
+    root, workspace = render_sidebar()
 	data = render_data_picker(root, workspace)
 
 	tabs = st.tabs(["Overview", "3D trajectories", "Tracks", "Metrics", "Scene data", "Training", "Jobs"])
