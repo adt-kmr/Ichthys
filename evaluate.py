@@ -355,24 +355,39 @@ def build_argparser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-	args = build_argparser().parse_args()
-	gt_path = Path(args.gt)
-	try:
-		dist_thr = _benchmark_dist_thr(gt_path) if args.dist_thr is None else args.dist_thr
-	except ValueError as exc:
-		build_argparser().error(str(exc))
-	res = evaluate_3d_mot(
-		pred_path=Path(args.pred),
-		gt_path=gt_path,
-		dist_thr=float(dist_thr),
-		t_min=args.t_min,
-		t_max=args.t_max,
-		ignore_empty_frames=bool(args.ignore_empty_frames),
-		gt_t_offset=int(args.gt_t_offset),
-		pred_t_offset=int(args.pred_t_offset),
-		match_pred_range=bool(args.match_pred_range),
-	)
-	print(res.summary_text)
+    args = build_argparser().parse_args()
+
+    # Validate input files exist
+    pred_path = Path(args.pred)
+    gt_path = Path(args.gt)
+    if not pred_path.exists():
+        raise FileNotFoundError(
+            f"Prediction file not found: {args.pred}\n"
+            "Please verify the path is correct and the file exists with the expected header: object,Timestamp,X,Y,Z,..."
+        )
+    if not gt_path.exists():
+        raise FileNotFoundError(
+            f"Ground truth file not found: {args.gt}\n"
+            "Please verify the path is correct and the file exists with the expected columns: Actor,Timestamp,X,Y,Z"
+        )
+
+    gt_path = Path(args.gt)
+    try:
+        dist_thr = _benchmark_dist_thr(gt_path) if args.dist_thr is None else args.dist_thr
+    except ValueError as exc:
+        build_argparser().error(str(exc))
+    res = evaluate_3d_mot(
+        pred_path=Path(args.pred),
+        gt_path=gt_path,
+        dist_thr=float(dist_thr),
+        t_min=args.t_min,
+        t_max=args.t_max,
+        ignore_empty_frames=bool(args.ignore_empty_frames),
+        gt_t_offset=int(args.gt_t_offset),
+        pred_t_offset=int(args.pred_t_offset),
+        match_pred_range=bool(args.match_pred_range),
+    )
+    print(res.summary_text)
 
 
 if __name__ == "__main__":
