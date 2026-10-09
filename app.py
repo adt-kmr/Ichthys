@@ -175,6 +175,18 @@ def render_sidebar() -> tuple:
 		st.error(str(exc))
 		st.stop()
 
+	# Display workspace statistics in sidebar
+	st.sidebar.divider()
+	st.sidebar.caption("Workspace status")
+	columns = st.sidebar.columns(3)
+	columns[0].metric("Predictions", len(workspace.predictions))
+	columns[1].metric("Ground truth", len(workspace.ground_truth))
+	columns[2].metric("Scenes", len(workspace.scenes))
+	
+	if workspace.images:
+		total_images = sum(workspace.images.values())
+		st.sidebar.caption(f"{total_images} images across {len(workspace.images)} camera directories")
+
 	return root, workspace
 
 
