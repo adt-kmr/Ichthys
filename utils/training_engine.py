@@ -6,6 +6,12 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from tqdm import tqdm
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -165,7 +171,7 @@ class IchthysTrainer:
         train_dataset, val_dataset = self._load_datasets()
         self._build_pseudo_gt_cache(train_dataset, val_dataset)
 
-        for epoch in range(1, self.config.total_epochs + 1):
+        for epoch in tqdm(range(1, self.config.total_epochs + 1), desc="Training epochs"):
             use_ctr = epoch > self.config.warmup_epochs
             use_temp = epoch > self.config.warmup_epochs
 
