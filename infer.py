@@ -28,17 +28,16 @@ what training actually learned:
    ghosts (noise).
 
 Architecture
-------------
+----------
 Output format:
     object,Timestamp,X,Y,Z,group
 """
-
 from __future__ import annotations
 
 import argparse
 import os
-import sys
 import time
+from tqdm import tqdm
 import json
 from collections import deque
 from dataclasses import dataclass, field
@@ -525,7 +524,7 @@ def run_inference_new(
 
     t0 = time.time()
     with torch.no_grad():
-        for idx_frame, frame in enumerate(frames):
+        for idx_frame, frame in tqdm(enumerate(frames), total=len(frames), desc="Encoding frames"):
             frame_num = int(frame["frame"])
             detections = frame["detections"]
 
@@ -629,7 +628,7 @@ def run_inference_new(
 
     t1 = time.time()
 
-    for t_idx in range(len(all_frame_groups)):
+    for t_idx in tqdm(range(len(all_frame_groups)), total=len(all_frame_groups), desc="Tracking frames"):
         groups = all_frame_groups[t_idx]
 
         if len(groups) == 0:
