@@ -47,3 +47,7 @@ Progress bars use `tqdm` and show:
 - Descriptive label (e.g., "Training epochs", "Encoding frames")
 
 Progress bars automatically update per iteration and disappear when complete.
+
+## Version
+- Added: 2026-01-01
+- Initial UX improvements release
