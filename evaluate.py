@@ -40,6 +40,7 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
+from tqdm import tqdm
 
 
 def _read_pred_txt(pred_path: Path) -> Dict[int, List[Tuple[str, np.ndarray]]]:
@@ -168,13 +169,13 @@ def evaluate_3d_mot(
 	pred: Dict[int, List[Tuple[str, np.ndarray]]] = {t + int(pred_t_offset): v for t, v in pred_raw.items()}
 	gt: Dict[int, List[Tuple[str, np.ndarray]]] = {t + int(gt_t_offset): v for t, v in gt_raw.items()}
 
-	all_ts = sorted(set(pred.keys()) | set(gt.keys()))
+all_ts = sorted(set(pred.keys()) | set(gt.keys()))
+
 	if match_pred_range:
 		# Only evaluate frames where predictions exist, so missing pred frames
 		# at the start/end don't inflate FN.
 		pred_ts = set(pred.keys())
 		if len(pred_ts) > 0:
-			all_ts = sorted(set(pred.keys()) | set(gt.keys()))
 			pred_t_min = min(pred_ts)
 			pred_t_max = max(pred_ts)
 			all_ts = [t for t in all_ts if pred_t_min <= t <= pred_t_max]
@@ -184,6 +185,8 @@ def evaluate_3d_mot(
 		all_ts = [t for t in all_ts if t <= t_max]
 
 	acc = mm.MOTAccumulator(auto_id=True)
+
+	# Some motmetrics/pandas versions attempt to cast IDs to float internally.
 
 	# Some motmetrics/pandas versions attempt to cast IDs to float internally.
 	# To be robust, map arbitrary string IDs -> stable integer IDs.
@@ -201,7 +204,7 @@ def evaluate_3d_mot(
 			out.append(mapping[s])
 		return out, next_id
 
-	for t in all_ts:
+	for t in tqdm(all_ts, desc="Evaluating frames"):
 		gt_items = gt.get(t, [])
 		pr_items = pred.get(t, [])
 		if ignore_empty_frames and len(gt_items) == 0 and len(pr_items) == 0:
