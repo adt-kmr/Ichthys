@@ -171,7 +171,7 @@ class IchthysTrainer:
         train_dataset, val_dataset = self._load_datasets()
         self._build_pseudo_gt_cache(train_dataset, val_dataset)
 
-        for epoch in tqdm(range(1, self.config.total_epochs + 1), desc="Training epochs"):
+        for epoch in tqdm(range(1, self.config.total_epochs + 1), desc="Training epochs", mininterval=5, miniters=1):
             use_ctr = epoch > self.config.warmup_epochs
             use_temp = epoch > self.config.warmup_epochs
 
